@@ -12,7 +12,7 @@ main{
 .fundoGame{
     width: 950px;
     height: 550px;
-    background-image: url(../image/bg.jpg);
+    background-image: url(../image/bg.png);
     border: solid 8px #21230b;
     background-repeat: repeat-x;
 }
@@ -140,8 +140,8 @@ footer{
     position: relative;
 }
 .amigo{
-    width: 21px;
-    height: 50px;
+    width: 80px;
+    height: 110px;
     background-image: url(../image/amigo.png);
     background-repeat: no-repeat;
     position: relative;
