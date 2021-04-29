@@ -1,15 +1,60 @@
 @import url('https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Syne+Mono&display=swap');
 
+/*
+ * General Style
+ */
 body{
     background-image: url(../image/gradient.png);
     background-repeat: repeat-x;
 }
+
 main{
     width: 950px;
     height: auto;
     margin: 0 auto;
 }
+
+header{
+    width: 950px;
+    height: 100px;
+    background: url(../image/header.png);
+    background-repeat: no-repeat;
+    border: 8px;
+    border-style: solid;
+    border-color: #21230b;
+}
+
+footer{
+    width: 950px;
+    height: 100px;
+    background: url(../image/footer.png);
+    background-repeat: no-repeat;
+    border-left: 8px;
+    border-right: 8px;
+    border-style: solid;
+    border-color: #21230b;
+}
+
+aside{
+    width: 950px;
+    height: 100px;
+    border-left: 8px;
+    border-right: 8px;
+    border-style: solid;
+}
+
+.ad{
+    width: 728px;
+    height: 90px;
+    margin: 0 auto;
+    padding: 5px 0 5px 0;
+}
+
+
+/*
+ * Main Menu Style
+ */ 
 .fundoGame{
     width: 950px;
     height: 550px;
@@ -18,121 +63,90 @@ main{
     background-repeat: repeat-x;
 }
 .inicio{
-    width: 250px;
-    height: 250px;
-    padding: 10px;
-    text-align: center;
-    background: url(../image/bginicio.jpg);
-    background-repeat: no-repeat;
-    margin: 0 auto;
-    margin-top: 125px;
-    border-radius: 200px;
+    width: 950px;
+    height: 550px;
+    background: url(../image/title.png);
 }
-.inicio h2{
-    font-family: 'Shadows Into Light', cursive;
-    font-size: 50px;
-    color: #ffffff;
-}
-.inicio p{
-    font-family: 'Syne Mono', monospace;
-    color: #ffffff;
-    font-size: 16px;
-    margin-top: -20px;
-}
+
+/*
+ * InGame Style
+ */
+
 .player{
-    width: 128px;
-    height: 128px;
+    width: 100px;
+    height: 115px;
     background-image: url(../image/player.png);
-    animation: play .5s steps(3) infinite;
+    animation: player-animation .5s steps(4) infinite;
     position: relative;
     left: 50px;
     top: 15px;
 
-    -webkit-animation: play .5s steps(3) infinite;
-    -moz-animation: play .5s steps(3) infinite;
-    -ms-animation: play .5s steps(3) infinite;
-    -o-animation: play .5s steps(3) infinite;
+    -webkit-animation: player-animation .5s steps(4) infinite;
+    -moz-animation: player-animation .5s steps(4) infinite;
+    -ms-animation: player-animation .5s steps(4) infinite;
+    -o-animation: player-animation .5s steps(4) infinite;
 }
-@keyframes play{
+@keyframes player-animation{
     from{background-position: 0px;}
-    to{background-position: -384px;}
+    to{background-position: -400px;}
 }
 
-.inimigo{
-    width: 128px;
-    height: 128px;
-    background-image: url(../image/inimigo.png);
+.missile{
+    width: 220px;
+    height: 75px;
+    background-image: url(../image/missile.png);
     position: relative;
     left: 800px;
-    transform: scaleX(-1);
-    -webkit-transform: scaleX(-1);
-    animation: inimi .5s steps(3) infinite;
+    animation: missile-animation .5s steps(5) infinite;
 
-    -webkit-animation: inimi .5s steps(3) infinite;
-    -moz-animation: inimi .5s steps(3) infinite;
-    -ms-animation: inimi .5s steps(3) infinite;
-    -o-animation: inimi .5s steps(3) infinite;
+    -webkit-animation: missile-animation .5s steps(5) infinite;
+    -moz-animation: missile-animation .5s steps(5) infinite;
+    -ms-animation: missile-animation .5s steps(5) infinite;
+    -o-animation: missile-animation .5s steps(5) infinite;
 }
-@keyframes inimi{
+@keyframes missile-animation{
     from{background-position: 0px;}
-    to{background-position: -384px;}
+    to{background-position: 1100px;}
 }
-.npc{
-    width: 128px;
-    height: 128px;
-    background-image: url(../image/npc.png);
+.obstacle{
+    width: 110px;
+    height: 270px;
+    background-image: url(../image/obstacle.png);
     position: relative;
-    top: 130px;
     left: 800px;
-    animation: npcanima .5s steps(3) infinite;
+    animation: obstacle-animation .5s steps(10) infinite;
 
-    -webkit-animation: npcanima .5s steps(3) infinite;
-    -moz-animation: npcanima .5s steps(3) infinite;
-    -ms-animation: npcanima .5s steps(3) infinite;
-    -o-animation: npcanima .5s steps(3) infinite;
+    -webkit-animation: obstacle-animation .5s steps(10) infinite;
+    -moz-animation: obstacle-animation .5s steps(10) infinite;
+    -ms-animation: obstacle-animation .5s steps(10) infinite;
+    -o-animation: obstacle-animation .5s steps(10) infinite;
 }
-@keyframes npcanima{
+@keyframes obstacle-animation{
     from{background-position: 0px;}
-    to{background-position: -384px;}
+    to{background-position: -1100px;}
 }
 
-header{
-    width: 950px;
-    height: 100px;
-    background: url(../image/bgtopo.jpg);
-    background-repeat: no-repeat;
-    border: 8px;
-    border-style: solid;
-    border-color: #21230b;
+.scientist{
+    width: 64px;
+    height: 105px;
+    background-image: url(../image/scienstist.png);
+    position: relative;
+    top: -100px;
+    left: 120px;
+    animation: scientist-animation .5s steps(4) infinite;
+
+    -webkit-animation: scientist-animation .5s steps(4) infinite;
+    -moz-animation: scientist-animation .5s steps(4) infinite;
+    -ms-animation: scientist-animation .5s steps(4) infinite;
+    -o-animation: scientist-animation .5s steps(4) infinite;
 }
-.logo{
-    width: 188px;
-    height: 100px;
-    margin: 0 auto;
+@keyframes scientist-animation{
+    from{background-position: 0px;}
+    to{background-position: -260px;}
 }
-aside{
-    width: 950px;
-    height: 100px;
-    border-left: 8px;
-    border-right: 8px;
-    border-style: solid;
-}
-.banner{
-    width: 728px;
-    height: 90px;
-    margin: 0 auto;
-    padding: 5px 0 5px 0;
-}
-footer{
-    width: 950px;
-    height: 100px;
-    background: url(../image/rodape.jpg);
-    background-repeat: no-repeat;
-    border-left: 8px;
-    border-right: 8px;
-    border-style: solid;
-    border-color: #21230b;
-}
+
+
+
 .disparo{
     width: 10px;
     height: 10px;
@@ -140,15 +154,7 @@ footer{
     background-color: darkorange;
     position: relative;
 }
-.amigo{
-    width: 80px;
-    height: 110px;
-    background-image: url(../image/friend.png);
-    background-repeat: no-repeat;
-    position: relative;
-    top: 60px;
-    left: 120px;
-}
+
 .explosao{
     width: 250px;
     height: 241px;
