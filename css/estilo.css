@@ -154,20 +154,26 @@ aside{
     position: relative;
     left: 960px;
 }
-/** TO EDIT **/
-.disparo{
-    width: 10px;
-    height: 10px;
-    border-radius: 10px;
-    background-color: darkorange;
-    position: relative;
+
+.missileExplosion{
+    width: 440px;
+    height: 350px;
+    position: absolute;
+    animation: missileExplosion-animation .5s steps(13);
+    background-image: url(../image/explosion-sheet.png);
+
+    -webkit-animation: missileExplosion-animation .5s steps(13);
+    -moz-animation: missileExplosion-animation .5s steps(13);
+    -ms-animation: missileExplosion-animation .5s steps(13);
+    -o-animation: missileExplosion-animation .5s steps(13);
 }
 
-.explosao{
-    width: 250px;
-    height: 241px;
-    position: absolute;
+@keyframes missileExplosion-animation{
+    from{background-position: 0px;}
+    to{background-position: -5720px;}
 }
+
+/** TO EDIT **/
 .explosaoPlayer{
     width: 250px;
     height: 241px;
