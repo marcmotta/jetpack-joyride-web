@@ -55,14 +55,14 @@ aside{
 /*
  * Main Menu Style
  */ 
-.fundoGame{
+.backgroundGame{
     width: 950px;
     height: 550px;
     background-image: url(../image/bg.png);
     border: solid 8px #21230b;
     background-repeat: repeat-x;
 }
-.inicio{
+.start{
     width: 950px;
     height: 550px;
     background: url(../image/title.png);
@@ -71,15 +71,15 @@ aside{
 /*
  * InGame Style
  */
-
+#gameplay {
+    overflow: hidden;   
+}
 .player{
     width: 100px;
     height: 115px;
     background-image: url(../image/player.png);
     animation: player-animation .5s steps(4) infinite;
     position: relative;
-    left: 50px;
-    top: 15px;
 
     -webkit-animation: player-animation .5s steps(4) infinite;
     -moz-animation: player-animation .5s steps(4) infinite;
@@ -96,7 +96,7 @@ aside{
     height: 75px;
     background-image: url(../image/missile.png);
     position: relative;
-    left: 800px;
+    left: 1100px;
     animation: missile-animation .5s steps(5) infinite;
 
     -webkit-animation: missile-animation .5s steps(5) infinite;
@@ -108,12 +108,13 @@ aside{
     from{background-position: 0px;}
     to{background-position: 1100px;}
 }
+
 .obstacle{
     width: 110px;
     height: 270px;
     background-image: url(../image/obstacle.png);
     position: relative;
-    left: 800px;
+    left: 1050px;
     animation: obstacle-animation .5s steps(10) infinite;
 
     -webkit-animation: obstacle-animation .5s steps(10) infinite;
@@ -129,10 +130,11 @@ aside{
 .scientist{
     width: 64px;
     height: 105px;
+    transform: scaleX(-1);
     background-image: url(../image/scienstist.png);
     position: relative;
-    top: -100px;
-    left: 120px;
+    top: -60px;
+    left: 620px;
     animation: scientist-animation .5s steps(4) infinite;
 
     -webkit-animation: scientist-animation .5s steps(4) infinite;
@@ -145,8 +147,14 @@ aside{
     to{background-position: -260px;}
 }
 
-
-
+.coin{
+    width: 50px;
+    height: 50px;
+    background-image: url(../image/coin.png);
+    position: relative;
+    left: 960px;
+}
+/** TO EDIT **/
 .disparo{
     width: 10px;
     height: 10px;
