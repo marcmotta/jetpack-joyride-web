@@ -1,19 +1,18 @@
 function start(){
      
-    var score = 0;
-
+     //GameLoop Methods Config
+     var game = {};
+     var gameSpeed = 5;
+     var scrollSpeed = 1;
+     var score = 0;
+     var isGameOver = false;
+ 
      //Object Area
      $("#start").hide(); 
-     $("#gameplay").append("<div class='score' id='score'>" + score + "</div>");
+     $("#gameplay").append("<div class='score' id='score'>" + score + " M</div>");
      $("#gameplay").append("<div class='missile' id='missile'></div>");
      $("#gameplay").append("<div class='player' id='player'></div>");
      $("#gameplay").append("<div class='obstacle' id='obstacle'></div>");
-     $("#gameplay").append("<div class='scientist' id='scientist'></div>");
-     $("#gameplay").append("<div class='coin' id='coin'></div>");
-
-     //GameLoop Methods Config
-     var game = {};
-     var objectSpeed = 5;
 
      game.timer = setInterval(gameLoop, Math.floor(Math.random() * 30) + 15);
 
@@ -21,13 +20,11 @@ function start(){
           scrollBackground();
           targetPlayerAndShoot();
           electricBarrier();
-          // generateCoins();
-          colliders();
+          collider();
           gameover(); 
           vitoria();
      }
      //End GameLoop Methods Config
-
 
      //Movement Area (Using Lerp to Move through Y Axis)
      var mouseX=$("#gameplay").innerWidth()/2;
@@ -36,12 +33,12 @@ function start(){
      var player = {
           el:$('#player'),
           w:100, h:115,
-          x:$("#gameplay").innerWidth() * .10, 
+          x:$("#gameplay").innerWidth() * .25, 
           y:$("#gameplay").innerHeight() / 2,
           
           update:function(){
                translateX = this.x-this.w/2;
-               translateY = this.y-this.h/2 >= 300 ? 300 : this.y-this.h/2;
+               translateY = this.y-this.h/2 >= 480 ? 480 : this.y-this.h/2;
                this.el.css({
                     'transform':'translate('+translateX+'px, '+translateY+'px)'
                });
@@ -52,7 +49,7 @@ function start(){
           mouseX = e.clientX / 2;
           mouseY = e.clientY / 2;
      })
-    
+
      function move(){
           // player.x = lerp(player.x, mouseX, 0.1);
           player.y = lerp(player.y, mouseY, 0.1);
@@ -65,19 +62,27 @@ function start(){
 
      setInterval (move,1000/60)
      //End Movement Area
-  
+
 
      //In Game Objects Control
      function scrollBackground(){
           esquerda = parseInt($(".backgroundGame").css("background-position"));
-          $(".backgroundGame").css("background-position", esquerda -1);
+          $(".backgroundGame").css("background-position", esquerda -scrollSpeed);
      }
 
+     var playMissile = true;
+
      function targetPlayerAndShoot(){
+          if (playMissile) {
+               executaMissil();
+               playMissile = false;
+          }
           posX = parseInt($(".missile").css("left"));
-          $(".missile").css("left", posX - objectSpeed);
+          $(".missile").css("left", posX - gameSpeed);
+          $(".missile").css("background-position", esquerda -1);
           
           if(posX <= -300){
+               playMissile = true;
                $(".missile").css("left",1100);
                $(".missile").css("top",  ($('.player').offset().top + 15) / 2);
           }
@@ -85,207 +90,131 @@ function start(){
 
      function electricBarrier(){
           posX = parseInt($(".obstacle").css("left"));
-          $(".obstacle").css("left", posX - objectSpeed);
+          $(".obstacle").css("left", posX - gameSpeed);
           if(posX <= -250){
                var posY = parseInt(Math.random() * 30);
                $(".obstacle").css("left",1050);
           }
      }
-
-     // function generateCoins()
-     // {
-     //      posX = parseInt($(".coin").css("left"));
-     //      $(".coin").css("left", posX - 5);
-          
-     //      if(posX <= -50){
-     //           var posY = parseInt(Math.random() * 300);
-     //           $(".coin").css("left",1100);
-     //           $(".coin").css("top",50);
-
-     //      }
-     // }
-
-
-     function colliders(){
-          var colPlayerMissile = ($(".player")).collision($(".missile"));
-          // var colPlayerObstacle = ($(".player")).collision($(".obstacle"));
-          // var colPlayerScientist = ($(".player")).collision($(".scientist"));
-          // var colisao6 = ($(".amigo")).collision($(".npc"));
-
-          //Collision/Effect PlayerMissile Area
-          if(colPlayerMissile.length>0){
-               missileX = parseInt($(".missile").css("left"));
-               missileY = parseInt($(".missile").css("top"));
-               missileExplosion(missileX, missileY);
-
-               playerX = parseInt($(".player").css("left"));
-               playerY = parseInt($(".player").css("top"));
-               explosaoPlayer(playerX, playerY);
-
+ 
+ 
+    function collider(){
+         var colPlayerMissile = ($(".player")).collision($(".missile"));
+         var colPlayerObstacle = ($(".player")).collision($(".obstacle"));
+ 
+         if(colPlayerMissile.length>0){
+               inimigoX = parseInt($(".missile").css("left"));
+               inimigoY = parseInt($(".missile").css("top"));
+               explosionFX(inimigoX, inimigoY);
                executaExplosao();
 
-               score-=5;
-               document.getElementById("score").innerHTML = String(score);
+               isGameOver = true;
+               gameover();
 
                posicaoY = parseInt(Math.random()*300);
                $(".missile").css("left", 1150);
                $(".missile").css("top", posicaoY);
+         }
+         if(colPlayerObstacle.length>0){
+              obstacleX = parseInt($(".obstacle").css("left"));
+              obstacleY = parseInt($(".obstacle").css("top"));
+              explosionRayFX(obstacleX, obstacleY);
+              executaExplosao();
+
+              isGameOver = true;
+              gameover();
+
+              $(".obstacle").css("left", 1150);
+              $(".obstacle").css("top", 130);
+ 
+          //     $(".player").css("left", 100);
+          //     $(".player").css("top", -50);
+         }
+
+          if(colisao6.length>0){
+               // se remover esse if o collisor para de funcionar BECAUSE REASONS!
           }
+    }
 
-          
-          function missileExplosion(missileX, missileY){
-               $(".backgroundGame").append("<div class='missileExplosion'></div>");
-               var missile = $(".missileExplosion");
-               missile.css("top",missileY);
-               missile.css("left",missileX+220);
-               var exitMissionExplosionTimer = window.setInterval(exitMissionExplosion,1000);
 
-               function exitMissionExplosion(){
-                    missile.remove();
-                    window.clearInterval(exitMissionExplosionTimer);
-                    exitMissionExplosionTimer = null;
+    function explosionFX(inimigoX, inimigoY){
+         $("#gameplay").append("<div class='explosion'></div>");
+         var explosionDiv = $(".explosion");
+         explosionDiv.css("top",inimigoY+120);
+         explosionDiv.css("left",inimigoX+320);
+
+         var timeExplosion = window.setInterval(removeExplosion,1000);
+ 
+         function removeExplosion(){
+          explosionDiv.remove();
+              window.clearInterval(timeExplosion);
+              timeExplosion = null;
+         }
+    }
+
+    function explosionRayFX(inimigoX, inimigoY){
+          $("#gameplay").append("<div class='explosion'></div>");
+          var explosionDiv = $(".explosion");
+          explosionDiv.css("top",inimigoY+290);
+          explosionDiv.css("left",inimigoX+380);
+
+          var timeExplosion = window.setInterval(removeExplosion,1000);
+
+          function removeExplosion(){
+          explosionDiv.remove();
+               window.clearInterval(timeExplosion);
+               timeExplosion = null;
+          }
+     }
+
+
+  
+     function countScore(){     
+               if (score % 10 == 0){
+                    scrollSpeed++;
+                    gameSpeed++;
                }
-          }
-          //Collision/Effect PlayerMissile Area End
-          //Collision PlayerObstacle Area
-          if(colPlayerObstacle.length>0){
-               npcX = parseInt($(".npc").css("left"));
-               npcY = parseInt($(".npc").css("top"));
-
-               playerX = parseInt($(".player").css("left"));
-               playerY = parseInt($(".player").css("top"));
-               explosaoPlayer(playerX, playerY);
-
-               executaExplosao();
-
-               score-=5;
-               document.getElementById("score").innerHTML = String(score);
-
-               $(".npc").css("left", 800);
-               $(".npc").css("top", 130);
-
-               $(".player").css("left", 100);
-               $(".player").css("top", -50);
-          }
-          //Collision PlayerObstacle Area End
-          // //Collision PlayerMissile Area End
-          // if(colPlayerScientist.length>0){
-          //      $(".amigo").hide();
-          //      var tempoRecriar = window.setInterval(recriar, 4000);
-          //      score+=5;
-          //      document.getElementById("score").innerHTML = String(score);
-          // }
-          // function recriar(){
-          //      $(".amigo").show();
-          //      window.clearInterval(tempoRecriar);
-          //      tempoRecriar = null; 
-          // }
-          // if(colisao6.length>0){
-          //      amigoX = parseInt($(".amigo").css("left"));
-          //      amigoY = parseInt($(".amigo").css("top"));
-          //      explosaoAmigo(amigoX, amigoY);
-          //      $(".amigo").hide();
-          //      score-=1;
-          //      document.getElementById("score").innerHTML = String(score);
-          //      var tempoRecriar = window.setInterval(recriar, 6000);
-          // }
+               document.getElementById("score").innerHTML = String(score++) + " M";
      }
 
+    setInterval(countScore, 1000);
 
-   function explosaoPlayer(playerX, playerY){
-        $(".backgroundGame").append("<div class='explosaoPlayer'></div>");
-        $(".explosaoPlayer").css("background-image","url(image/explosao-player.png)");
-        var div2 = $(".explosaoPlayer");
-        div2.css("top",playerY+300);
-        div2.css("left",playerX+450);
-        div2.animate({width:200, opacity:0}, "slow");
-        var tempoExplosaoPlayer = window.setInterval(removeExplosaoPlayer, 1000);
-
-        function removeExplosaoPlayer(){
-             div2.remove();
-             window.clearInterval(tempoExplosaoPlayer);
-             tempoExplosaoPlayer = null;
-        }
-   }
-   function explosaoNpc(npcX, npcY){
-        $(".backgroundGame").append("<div class='explosaoNpc'></div>");
-        $(".explosaoNpc").css("background-image", "url(image/explosao.png");
-        var div3 = $(".explosaoNpc");
-        div3.css("top", npcY+400);
-        div3.css("left", npcX+500);
-        div3.animate({width:200, opacity:0}, "slow");
-        var tempoExplosaoNpc = window.setInterval(removeExplosaoNpc, 1000);
-
-        function removeExplosaoNpc(){
-             div3.remove();
-             window.clearInterval(tempoExplosaoNpc);
-             tempoExplosaoNpc = null;
-        }
-   }
-   function explosaoAmigo(amigoX, amigoY){
-        $(".backgroundGame").append("<div class='explosaoAmigo'></div>");
-        $(".explosaoAmigo").css("background-image", "url(image/sangue.png");
-        var div4 = $(".explosaoAmigo");
-        div4.css("top", amigoY+500);
-        div4.css("left", amigoX+320);
-        div4.animate({width:300, opacity:0}, "slow");
-        var tempoExplosaoAmigo = window.setInterval(removeExplosaoAmigo, 1000);
-        function removeExplosaoAmigo(){
-             div4.remove();
-             window.clearInterval(tempoExplosaoAmigo);
-             tempoExplosaoAmigo = null;
-        }
-   }
-   function gameover(){
-        if(score < 0){
-          window.clearInterval(game.timer);
-          game.timer = null;
-          score = 0;
-          $(".player").remove();
-          $(".npc").remove();
-          $(".missile").remove();
-          $(".amigo").remove();
-          $(".score").remove()
-          $("#inicio").show();
-          pauseTrilha();
-        }
-   }
-    function vitoria(){
-        if(score>=10){
-             window.clearInterval(game.timer);
-             game.timer = null;
-             $(".obstacle").remove();
-             $(".missile").remove();
-             $(".scientist").remove();
-             $(".backgroundGame").append("<div class='vitoria'><h1>Você ganhou!!</h1></div>");
-             pauseTrilha();
+     function gameover(){
+          if(isGameOver){
+               window.clearInterval(game.timer);
+               game.timer = null;
+               score = 0;
+               $(".player").remove();
+               $(".obstacle").remove();
+               $(".missile").remove();
+               $(".score").remove()
+               $("#start").show();
+               pauseTrilha();
           }
-    }
-
-    //Audio Area
-    var trilha = document.getElementById("background-music");
-    var audioExplosao = document.getElementById("audioExplosao");
-
-    //Music Area
-    function executaTrilha(){
-        trilha.play();
-        trilha.volume = 0.2;
-    }
-    function pauseTrilha(){
-        trilha.pause();
-    }
-    executaTrilha();
-
-    //SFX Area
-    function executaExplosao(){
-        audioExplosao.play();
-    }
-       
-    //Utils
-     function getCurrentPlayerY(el) {
-          var rect = $('.player').getBoundingClientRect(),
-          scrollLeft = window.pageXOffset || document.documentElement.scrollLeft,
-          scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-          return { top: rect.top + scrollTop, left: rect.left + scrollLeft }
      }
-}
+
+     //Audio Area
+     var trilha = document.getElementById("background-music");
+     var audioExplosao = document.getElementById("audioExplosao3");
+     var audioMissile = document.getElementById("audioMissile");
+ 
+     //Music Area
+     function executaTrilha(){
+         trilha.play();
+         trilha.volume = 0.2;
+     }
+     function pauseTrilha(){
+         trilha.pause();
+     }
+     executaTrilha();
+ 
+     //SFX Area
+     function executaExplosao(){
+         audioExplosao.play();
+     }
+
+     function executaMissil(){
+          audioMissile.play();
+      }
+     
+ }
